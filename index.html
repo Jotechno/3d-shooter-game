@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS ARENA 3D — Duelo FPS contra IA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Barra de Navegación Superior del Sitio Web -->
+    <header class="top-navbar">
+      <div class="brand">
+        <div class="brand-icon">N3D</div>
+        <div>
+          <div class="brand-title">NEXUS ARENA 3D</div>
+          <div class="brand-subtitle">Combate Táctico en Primera Persona vs IA</div>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <div class="nav-group">
+          <span class="nav-label">Nivel IA:</span>
+          <select id="nav-difficulty" class="nav-select">
+            <option value="easy">Recluta (Fácil)</option>
+            <option value="normal" selected>Veterano (Normal)</option>
+            <option value="hard">Élite Cyber (Difícil)</option>
+          </select>
+        </div>
+
+        <button id="btn-music" class="nav-btn active" type="button">🎵 Synthwave: ON</button>
+        <button id="btn-audio" class="nav-btn active" type="button">🔊 Efectos: ON</button>
+        <button id="btn-restart" class="nav-btn" type="button">↻ Reiniciar</button>
+        <button id="btn-menu" class="nav-btn" type="button">☰ Menú</button>
+        <button id="btn-fullscreen" class="nav-btn" type="button">⛶ Pantalla Completa</button>
+      </div>
+    </header>
+
+    <!-- Contenedor Principal del Viewport 3D y HUD -->
+    <main class="viewport-container">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Capas de Efectos Visuales en Pantalla -->
+      <div class="screen-fx vignette-fx"></div>
+      <div class="screen-fx damage-fx"></div>
+      <div class="screen-fx heal-fx"></div>
+      <div class="screen-fx boost-fx"></div>
+
+      <!-- Retícula Central (Crosshair) e Indicador Direccional del Oponente -->
+      <div class="crosshair-wrapper">
+        <div id="enemy-direction-indicator" class="enemy-direction-indicator">
+          <div class="enemy-arrow"></div>
+        </div>
+        <div id="crosshair-ring" class="crosshair-ring">
+          <div class="ch-line ch-top"></div>
+          <div class="ch-line ch-bottom"></div>
+          <div class="ch-line ch-left"></div>
+          <div class="ch-line ch-right"></div>
+        </div>
+        <div class="crosshair-dot"></div>
+        <div id="hitmarker" class="hitmarker"></div>
+      </div>
+
+      <!-- Banner Central de Anuncios de Ronda -->
+      <div class="center-banner">
+        <div id="center-banner-text" class="banner-text">RONDA 1 — ¡A COMBATIR!</div>
+      </div>
+
+      <!-- Capa de HUD en Primera Persona -->
+      <div class="hud-layer">
+        <!-- Fila Superior: Radar 2D, Marcador/Barra de Jefe IA y Registro de Combate -->
+        <div class="hud-top">
+          <!-- Minimapa / Radar Táctico -->
+          <div class="radar-card">
+            <div class="radar-header">
+              <span>Radar Táctico</span>
+              <div class="radar-legend">
+                <span><i class="legend-dot" style="background:#00f0ff"></i>TÚ</span>
+                <span><i class="legend-dot" style="background:#ff1e56"></i>IA</span>
+              </div>
+            </div>
+            <canvas id="radar-canvas" width="208" height="208"></canvas>
+          </div>
+
+          <!-- Marcador de Rondas y Estado del Oponente IA -->
+          <div class="hud-center-top">
+            <div class="Match-scoreboard">
+              <div class="score-side">
+                <span class="score-label player">JUGADOR</span>
+                <span id="score-player" class="score-value">0</span>
+              </div>
+              <div class="round-timer-box">
+                <span id="round-badge-text" class="round-badge">RONDA 1</span>
+                <span id="round-timer" class="timer-text">00:00</span>
+              </div>
+              <div class="score-side">
+                <span id="score-ai" class="score-value">0</span>
+                <span class="score-label ai">NEXUS-9 (IA)</span>
+              </div>
+            </div>
+
+            <div class="ai-boss-panel">
+              <div class="ai-boss-header">
+                <div class="ai-name">
+                  <span>🤖 OPONENTE IA: NEXUS-9</span>
+                  <span id="hud-ai-state" class="ai-state-pill">COMBATE TÁCTICO</span>
+                </div>
+                <span id="hud-ai-hp-num" class="ai-hp-numbers">100 HP | 50 ESC</span>
+              </div>
+              <div class="bar-track">
+                <div id="hud-ai-hp-bar" class="bar-fill ai-hp" style="width: 100%"></div>
+              </div>
+              <div class="bar-track bar-track-sm" style="height: 5px; margin-top: 4px">
+                <div id="hud-ai-shield-bar" class="bar-fill ai-shield" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registro de Eventos de Combate y Recordatorio de Controles -->
+          <div class="combat-feed-panel">
+            <div class="feed-title">Registro de Combate</div>
+            <div id="combat-log" class="combat-log">
+              <div class="log-entry player-hit">▸ Sistema NEXUS 3D inicializado.</div>
+              <div class="log-entry">▸ Usa las Flechas para moverte y girar.</div>
+              <div class="log-entry">▸ Pulsa ESPACIO para disparar.</div>
+            </div>
+            <div class="controls-mini-card">
+              <div><span class="key-pill">↑</span> <span class="key-pill">↓</span> Avanzar/Atrás</div>
+              <div><span class="key-pill">←</span> <span class="key-pill">→</span> Girar Vista</div>
+              <div><span class="key-pill">ESPACIO</span> Disparar</div>
+              <div><span class="key-pill">1-3</span> Cambiar Arma</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila Inferior: Salud del Jugador, Monitor de Teclas en Vivo y Arma Equipada -->
+        <div class="hud-bottom">
+          <!-- Salud y Escudo del Jugador -->
+          <div class="player-vitals-card">
+            <div class="vitals-row">
+              <span class="vitals-title">Integridad de Blindaje</span>
+              <span id="hud-player-hp-num" class="vitals-number">100</span>
+            </div>
+            <div class="bar-track">
+              <div id="hud-player-hp-bar" class="bar-fill player-hp" style="width: 100%"></div>
+            </div>
+            <div class="bar-track" style="height: 6px; margin-top: 5px">
+              <div id="hud-player-shield-bar" class="bar-fill player-shield" style="width: 100%"></div>
+            </div>
+            <div class="vitals-subrow">
+              <span>ESCUDO DE ENERGÍA</span>
+              <span id="hud-dash-status" class="dash-ready">IMPULSO (SHIFT): LISTO</span>
+            </div>
+          </div>
+
+          <!-- Monitor Interactivo de Teclas en Tiempo Real (Flechas + Barra Espaciadora) -->
+          <div class="live-keys-hud" title="Indicador de controles en tiempo real">
+            <div class="arrow-pad">
+              <div></div>
+              <div id="key-up" class="hud-key">↑</div>
+              <div></div>
+              <div id="key-left" class="hud-key">←</div>
+              <div id="key-down" class="hud-key">↓</div>
+              <div id="key-right" class="hud-key">→</div>
+            </div>
+            <div id="key-space" class="hud-key space-key">
+              <span class="space-label">ESPACIO</span>
+              <span class="space-sub">DISPARAR</span>
+            </div>
+          </div>
+
+          <!-- Panel de Arma y Energía -->
+          <div class="weapon-card">
+            <div class="weapon-header">
+              <span id="hud-weapon-name" class="weapon-name">Rifle de Pulso NX-1</span>
+              <span id="hud-weapon-energy-num" class="energy-value">100%</span>
+            </div>
+            <div class="bar-track">
+              <div id="hud-weapon-energy-bar" class="bar-fill weapon-energy" style="width: 100%"></div>
+            </div>
+            <div class="weapon-slots">
+              <div class="weapon-slot active" data-slot="0">[1] Pulso</div>
+              <div class="weapon-slot" data-slot="1">[2] Riel</div>
+              <div class="weapon-slot" data-slot="2">[3] Dispersor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de Inicio / Pausa / Resultados de Partida -->
+      <div id="lobby-overlay" class="modal-overlay">
+        <div class="lobby-card">
+          <span class="lobby-badge">SIMULADOR DE COMBATE 3D WEBGL</span>
+          <h1 id="lobby-title-text" class="lobby-title">NEXUS ARENA 3D</h1>
+          <p id="lobby-desc-text" class="lobby-desc">
+            Entra en la arena cibernética en primera persona y enfréntate al droide táctico
+            <strong>NEXUS-9</strong> controlado por Inteligencia Artificial. Utiliza los pilares como
+            cobertura, recoge botiquines de nanobots y domina el duelo.
+          </p>
+
+          <!-- Resumen de Estadísticas (Visible al finalizar una partida) -->
+          <div id="stats-summary-section" style="display: none">
+            <div class="stats-summary-grid">
+              <div class="stat-tile">
+                <div id="stat-val-score" class="stat-tile-val">2 - 0</div>
+                <div class="stat-tile-lbl">Marcador Final</div>
+              </div>
+              <div class="stat-tile">
+                <div id="stat-val-dmg" class="stat-tile-val">0</div>
+                <div class="stat-tile-lbl">Daño Infligido</div>
+              </div>
+              <div class="stat-tile">
+                <div id="stat-val-acc" class="stat-tile-val">0%</div>
+                <div class="stat-tile-lbl">Precisión</div>
+              </div>
+              <div class="stat-tile">
+                <div id="stat-val-pickups" class="stat-tile-val">0</div>
+                <div class="stat-tile-lbl">Potenciadores</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guía Visual de Controles Principales -->
+          <div class="controls-showcase">
+            <div class="control-box">
+              <span class="control-box-title">Movimiento y Giro (Flechas)</span>
+              <div class="control-box-keys">
+                <span class="key-cap">↑</span>
+                <span class="key-cap">↓</span>
+                <span class="key-cap">←</span>
+                <span class="key-cap">→</span>
+              </div>
+              <span class="control-box-sub">
+                <strong>↑ / ↓</strong> para avanzar o retroceder y <strong>← / →</strong> para girar la cámara en 3D (también soporta <strong>A/D</strong> para strafe).
+              </span>
+            </div>
+
+            <div class="control-box">
+              <span class="control-box-title">Sistema de Disparo</span>
+              <div class="control-box-keys">
+                <span class="key-cap highlight">BARRA ESPACIADORA</span>
+              </div>
+              <span class="control-box-sub">
+                Presiona o mantén <strong>ESPACIO</strong> para disparar. La retícula se ilumina al fijar al enemigo.
+              </span>
+            </div>
+
+            <div class="control-box">
+              <span class="control-box-title">Arsenal y Habilidades</span>
+              <div class="control-box-keys">
+                <span class="key-cap">1</span>
+                <span class="key-cap">2</span>
+                <span class="key-cap">3</span>
+                <span class="key-cap">SHIFT</span>
+              </div>
+              <span class="control-box-sub">
+                Cambia entre <strong>Pulso</strong>, <strong>Cañón de Riel</strong> y <strong>Dispersor</strong>. Usa <strong>SHIFT</strong> para impulso evasivo.
+              </span>
+            </div>
+          </div>
+
+          <!-- Configuración de Dificultad de la IA y Formato de Partida -->
+          <div class="lobby-options">
+            <div class="option-block">
+              <span class="option-label">Dificultad de la IA (NEXUS-9)</span>
+              <div class="difficulty-pills">
+                <button type="button" class="diff-btn" data-diff="easy">Recluta</button>
+                <button type="button" class="diff-btn active" data-diff="normal">Veterano</button>
+                <button type="button" class="diff-btn" data-diff="hard">Élite Cyber</button>
+              </div>
+            </div>
+
+            <div class="option-block">
+              <span class="option-label">Formato del Duelo</span>
+              <div class="difficulty-pills">
+                <button type="button" class="diff-btn" data-rounds="1">1 Ronda</button>
+                <button type="button" class="diff-btn active" data-rounds="2">Mejor de 3</button>
+                <button type="button" class="diff-btn" data-rounds="3">Mejor de 5</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lobby-actions">
+            <button id="btn-start-match" type="button" class="primary-play-btn">
+              ▶ ENTRAR A LA ARENA Y COMBATIR
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Librería Three.js Local (con respaldo CDN en caso necesario) -->
+  <script src="lib/three.min.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    }
+  </script>
+  <script src="audio.js"></script>
+  <script src="arena.js"></script>
+  <script src="weapons.js"></script>
+  <script src="ai.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

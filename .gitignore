@@ -1,0 +1,36 @@
+# Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
+
+# Logs y reportes de depuración
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Archivos temporales y cachés
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+.cache/
+node_modules/
+dist/
