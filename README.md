@@ -1,4 +1,4 @@
-# 🎮 NEXUS ARENA 3D — Juego de Disparos 3D en Primera Persona
+# 🎮 NEXUS ARENA 3D — Juego de Disparos 3D en Primera Persona (Todo lo realizado a continuación fue hecho con la ayuda de Gemini Argon y Antigravity para el desarrollo de un curso de IA y Agentes)
 
 [![Jugar en Vivo - GitHub Pages](https://img.shields.io/badge/%F0%9F%8E%AE_JUGAR_EN_VIVO-GitHub_Pages-00f0ff?style=for-the-badge&logo=github&logoColor=black)](https://jotechno.github.io/3d-shooter-game/)
 [![Repositorio GitHub](https://img.shields.io/badge/GitHub-3d--shooter--game-181717?style=for-the-badge&logo=github)](https://github.com/Jotechno/3d-shooter-game)
