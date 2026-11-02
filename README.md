@@ -1,15 +1,12 @@
-# 🎮 NEXUS ARENA 3D — Juego de Disparos 3D en Primera Persona (Todo lo realizado a continuación fue hecho con la ayuda de Gemini Argon y Antigravity para el desarrollo de un curso de IA y Agentes)
+#  NEXUS ARENA 3D — Juego de Disparos 3D en Primera Persona (Todo lo realizado a continuación fue hecho con la ayuda de Gemini Argon y Antigravity para el desarrollo de un curso de IA y Agentes)
 
 [![Jugar en Vivo - GitHub Pages](https://img.shields.io/badge/%F0%9F%8E%AE_JUGAR_EN_VIVO-GitHub_Pages-00f0ff?style=for-the-badge&logo=github&logoColor=black)](https://jotechno.github.io/3d-shooter-game/)
-[![Repositorio GitHub](https://img.shields.io/badge/GitHub-3d--shooter--game-181717?style=for-the-badge&logo=github)](https://github.com/Jotechno/3d-shooter-game)
 
 **NEXUS ARENA 3D** es un juego de disparos en primera persona (FPS) en 3D para navegador donde te enfrentas en una arena cibernética estilo neón contra **NEXUS-9**, un droide táctico controlado por Inteligencia Artificial.
 
-🌐 **Sitio Web en Vivo (GitHub Pages):** [**https://jotechno.github.io/3d-shooter-game/**](https://jotechno.github.io/3d-shooter-game/)
-
 ---
 
-## ✨ Características Principales
+##  Características Principales
 
 - **Entorno 3D en Primera Persona**: Arena futurista renderizada en tiempo real con iluminación dinámica, texturas procedurales, cúpula estelar, 12 pilares de cobertura con colisiones suaves y estaciones de potenciadores (botiquines de salud y núcleos de sobrecarga).
 - **Oponente IA con Máquina de Estados Táctica (`NEXUS-9`)**:
@@ -27,7 +24,7 @@
 
 ---
 
-## 🕹️ Controles del Juego
+##  Controles del Juego
 
 | Tecla | Acción |
 | :--- | :--- |
@@ -43,7 +40,7 @@
 
 ---
 
-## 🛠️ Tecnologías Empleadas
+##  Tecnologías Empleadas
 
 - **HTML5**: Estructura semántica del sitio web, HUD interactivo y modales de configuración.
 - **CSS3**: Diseño *Cyberpunk / Neon Sci-Fi*, animaciones de interfaz, efectos de pantalla (daño, curación, sobrecarga) y diseño responsivo.
@@ -53,7 +50,7 @@
 
 ---
 
-## 📂 Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```text
 .
@@ -68,14 +65,3 @@
     └── three.min.js # Motor WebGL Three.js local
 ```
 
----
-
-## 🚀 Ejecución Local
-
-Puedes abrir el archivo `index.html` directamente en cualquier navegador moderno o servirlo con un servidor estático local:
-
-```bash
-python -m http.server 8080
-```
-
-Luego visita `http://localhost:8080` en tu navegador.
